@@ -1,0 +1,31 @@
+.CalendarСell {
+  --bg-color: var(--color-control-bg-ghost);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--calendar-cell-width, calc(var(--control-height-s) + var(--space-2xs)));
+  height: var(--control-height-s);
+
+  &_range {
+    background: var(--bg-color);
+
+    &_first::before,
+    &_last::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: var(--bg-color);
+    }
+
+    &_first::before {
+      right: 0;
+    }
+
+    &_last::before {
+      left: 0;
+    }
+  }
+}
