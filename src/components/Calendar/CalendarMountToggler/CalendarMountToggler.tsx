@@ -41,7 +41,13 @@ export const CalendarMountToggler: React.FC<CalendarMountTogglerProps> = (props)
           iconSize="s"
         />
       )}
-      <Text className={cnCalendarMountToggler('Label')} as="span" size="s" align="center">
+      <Text
+        className={cnCalendarMountToggler('Label')}
+        as="span"
+        size="s"
+        align="center"
+        weight="bold"
+      >
         {label}
       </Text>
       {nextOnClick && (

@@ -8,6 +8,7 @@ import { cn } from '../../utils/bem';
 import { CalendarDay } from './CalendarDay/CalendarDay';
 import { CalendarMount } from './CalendarMount/CalendarMount';
 import { CalendarMountToggler } from './CalendarMountToggler/CalendarMountToggler';
+import { CalendarOneMount } from './CalendarOneMount/CalendarOneMount';
 import { CalendarCell } from './CalendarСell/CalendarСell';
 
 type CalendarProps = {
@@ -37,6 +38,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>((props, 
         daysOfWeek={['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']}
         daysOfMount={daysOfMount}
       />
+      <CalendarOneMount type="date" onChange={(value) => console.log(value)} />
     </div>
   );
 });
