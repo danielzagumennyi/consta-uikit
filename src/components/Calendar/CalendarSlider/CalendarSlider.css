@@ -1,0 +1,34 @@
+.CalendarSlider {
+  --mount-width: calc((var(--calendar-cell-width) * 14 - var(--control-height-m) * 2) / 13);
+  display: flex;
+  width: calc(var(--calendar-cell-width) * 14 + var(--space-m));
+
+  &-Slider {
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    margin: 0 var(--space-xs);
+    background: var(--color-control-bg-ghost);
+    border-radius: var(--control-radius);
+  }
+
+  &-Button_direction_prev {
+    transform: rotate(180deg);
+  }
+
+  &-SliderBody {
+    display: flex;
+    height: 100%;
+  }
+
+  &-Year {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  &-Mounth {
+    width: var(--mount-width);
+    height: var(--space-m);
+    margin-bottom: var(--space-3xs);
+  }
+}

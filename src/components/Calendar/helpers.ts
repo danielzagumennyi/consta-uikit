@@ -8,6 +8,7 @@ import {
   isSameDay,
   isWithinInterval,
   Locale,
+  startOfDay,
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
@@ -18,6 +19,26 @@ import { range } from '../../utils/array';
 import { isDateRange, isOnlyOneDateInRange } from '../../utils/date';
 import { isDefined, isNotNil } from '../../utils/type-guards';
 import { DateRange } from '../../utils/types/Date';
+import { PropsWithHTMLAttributesAndRef } from '../../utils/types/PropsWithHTMLAttributes';
+
+import { CalendarCellPropRange } from './CalendarСell/CalendarСell';
+
+export type CalendarProps<TYPE extends TypeProp> = PropsWithHTMLAttributesAndRef<
+  {
+    currentVisibleDate?: Date;
+    type: TYPE;
+    value?: ValueByType<TYPE>;
+    onChange?: (value: ValueByType<TYPE>) => void;
+    minDate?: Date;
+    maxDate?: Date;
+    events?: Date[];
+  },
+  HTMLDivElement
+>;
+
+export type Calendar = <TYPE extends TypeProp>(
+  props: CalendarProps<TYPE>,
+) => React.ReactElement | null;
 
 export const dateComparer = (a?: Date, b?: Date): number =>
   (a?.getTime() ?? 0) - (b?.getTime() ?? 0);
@@ -104,6 +125,34 @@ const isSelected = ({ date, value }: { date: Date; value?: Date | DateRange }): 
   return date.getTime() === value.getTime();
 };
 
+const isDateInRange = (date: Date, range: DateRange): CalendarCellPropRange => {
+  if (!range[0] || !range[1]) {
+    return false;
+  }
+
+  const dateTime = date.getTime();
+  const rangeTime = [range[0].getTime(), range[1].getTime()];
+
+  if (dateTime === rangeTime[0]) {
+    return 'first';
+  }
+
+  if (dateTime === rangeTime[1]) {
+    return 'last';
+  }
+
+  if (dateTime > rangeTime[0] && dateTime < rangeTime[1]) {
+    return true;
+  }
+
+  return false;
+};
+
+const hasEvent = (date: Date, events: Date[]): boolean =>
+  !!events.find((eventDate) => startOfDay(eventDate).getTime() === date.getTime());
+
+const isToday = (date: Date): boolean => startOfDay(new Date()).getTime() === date.getTime();
+
 /**
  * формирование дней месяца
  * @param {Props} Props
@@ -117,14 +166,17 @@ export const getMonthDays = (props: {
   locale?: Locale;
   handleDayClick?: (value: Date) => void;
   value?: Date | DateRange;
+  events?: Date[];
 }): {
-  date: Date;
   disabled?: boolean;
   onClick?: () => void;
   number: string;
   selected?: boolean;
+  range?: CalendarCellPropRange;
+  event?: boolean;
+  today?: boolean;
 }[] => {
-  const { date, locale = ruLocale, handleDayClick, value } = props;
+  const { date, locale = ruLocale, handleDayClick, value, events } = props;
   const currentMonth = date.getMonth();
   const startDate = startOfWeek(startOfMonth(date), {
     locale,
@@ -142,15 +194,16 @@ export const getMonthDays = (props: {
 
     if (date.getMonth() === currentMonth) {
       return {
-        date,
         number,
         onClick: handleDayClick ? () => handleDayClick(date) : undefined,
         selected: isSelected({ date, value }),
+        range: Array.isArray(value) && isDateInRange(date, value),
+        event: events && hasEvent(date, events),
+        today: isToday(date),
       };
     }
 
     return {
-      date,
       number,
       disabled: true,
     };
@@ -201,10 +254,16 @@ export const getHandleSelectDate: getHandleSelectDate = ({
       const [startDate, endDate] = value;
 
       if (isDefined(startDate)) {
+        if (startDate.getTime() === date.getTime()) {
+          return;
+        }
         return onChange(startDate > date ? [date, startDate] : [startDate, date]);
       }
 
       if (isDefined(endDate)) {
+        if (endDate.getTime() === date.getTime()) {
+          return;
+        }
         return onChange(endDate > date ? [date, endDate] : [endDate, date]);
       }
     };

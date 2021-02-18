@@ -6,7 +6,7 @@ import { IconForward } from '../../../icons/IconForward/IconForward';
 import { cn } from '../../../utils/bem';
 import { PropsWithJsxAttributes } from '../../../utils/types/PropsWithJsxAttributes';
 import { Button } from '../../Button/Button';
-import { Text } from '../../Text/Text';
+import { CalendarMountLabel } from '../CalendarMountLabel/CalendarMountLabel';
 
 type CalendarMountTogglerProps = PropsWithJsxAttributes<
   {
@@ -41,15 +41,7 @@ export const CalendarMountToggler: React.FC<CalendarMountTogglerProps> = (props)
           iconSize="s"
         />
       )}
-      <Text
-        className={cnCalendarMountToggler('Label')}
-        as="span"
-        size="s"
-        align="center"
-        weight="bold"
-      >
-        {label}
-      </Text>
+      <CalendarMountLabel className={cnCalendarMountToggler('Label')} label={label} />
       {nextOnClick && (
         <Button
           className={cnCalendarMountToggler('Button', { direction: 'next' })}
