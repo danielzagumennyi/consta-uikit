@@ -29,8 +29,8 @@ export const CalendarViewSlider: Calendar = React.forwardRef((props, ref) => {
     events,
     ...otherProps
   } = props;
-  // const [currentVisibleDate, setCurrentVisibleDate] = useState(currentVisibleDateProp);
-  const [currentVisibleDate] = useState(currentVisibleDateProp);
+
+  const [currentVisibleDate, setCurrentVisibleDate] = useState(currentVisibleDateProp);
   const handleSelectDate = getHandleSelectDate({ type, minDate, maxDate, value, onChange });
   const monthWeeks = getMonthDays({
     date: currentVisibleDate,
@@ -55,6 +55,8 @@ export const CalendarViewSlider: Calendar = React.forwardRef((props, ref) => {
       <CalendarSlider
         className={cnCalendarViewSlider('Slider')}
         currentVisibleDate={currentVisibleDate}
+        onChange={setCurrentVisibleDate}
+        value={value}
       />
       <div className={cnCalendarViewSlider('CalendarsWrapper')}>
         <div className={cnCalendarViewSlider('Calendar')}>
