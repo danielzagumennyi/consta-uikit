@@ -48,8 +48,6 @@ const getValueRange = (yearDate: Date, value?: Date | DateRange) => {
     return undefined;
   }
 
-  // console.log(value[0], value[1]);
-
   const yearStartDateTime = startOfYear(yearDate).getTime();
   const yearEndDateTime = endOfYear(yearDate).getTime();
   const valueStartDateTime = value[0].getTime();
@@ -64,9 +62,9 @@ const getValueRange = (yearDate: Date, value?: Date | DateRange) => {
   }
 
   const msInYear = yearEndDateTime - yearStartDateTime;
-  const v = (number: number) => (number / msInYear) * 100;
-  const msOffset = Math.floor(
-    v(valueStartDateTime <= yearStartDateTime ? 0 : valueStartDateTime - yearStartDateTime),
+  const inProcent = (number: number) => (number / msInYear) * 100;
+  const offset = Math.floor(
+    inProcent(valueStartDateTime <= yearStartDateTime ? 0 : valueStartDateTime - yearStartDateTime),
   );
 
   const minusYears = (n: number): number => {
@@ -78,13 +76,13 @@ const getValueRange = (yearDate: Date, value?: Date | DateRange) => {
     return n;
   };
 
-  const msWidth = v(
+  const width = Math.ceil(
     valueEndDateTime >= yearEndDateTime
-      ? 100 - msOffset
-      : minusYears(valueEndDateTime - valueStartDateTime),
+      ? 100 - offset
+      : inProcent(minusYears(valueEndDateTime - valueStartDateTime)),
   );
 
-  return [msOffset, msWidth];
+  return [offset, width];
 };
 
 const getMonthsData = (date: Date, locale: Locale = ruLocale) =>
@@ -162,10 +160,7 @@ export const CalendarSlider: React.FC<CalendarMountLabelProps> = (props) => {
               key={year.label}
               className={cnCalendarSlider('Year', {
                 position: year.positon,
-                selected:
-                  year.valueRange && year.valueRange[0] === 0 && year?.valueRange[1] === 100
-                    ? 'full'
-                    : !!year.valueRange,
+                selected: !!year.valueRange,
               })}
               style={
                 year.valueRange && {

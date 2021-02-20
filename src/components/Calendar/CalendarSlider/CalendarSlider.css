@@ -28,8 +28,6 @@
     position: absolute;
     display: flex;
     width: var(--year-width);
-
-    /* width: var(--year-width); */
     height: 100%;
     transition: transform 0.5s;
 
@@ -54,17 +52,12 @@
     &_selected::before {
       content: '';
       position: absolute;
-      z-index: -1;
       left: var(--value-offset);
+      bottom: 0;
       width: var(--value-width);
-      height: 100%;
-      background-color: rgba(0, 120, 210, 0.3);
-
-      /* pointer-events: none; */
-    }
-
-    &_selected_full {
-      background-color: rgba(0, 120, 210, 0.3);
+      height: var(--space-3xs);
+      background-color: var(--color-control-bg-primary);
+      pointer-events: none;
     }
   }
 
@@ -110,7 +103,6 @@
 
   &-Selector {
     position: absolute;
-    z-index: 1;
     width: calc(var(--mount-width) * 2);
     height: var(--slider-height);
     background-color: var(--color-control-bg-ghost);
